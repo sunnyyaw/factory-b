@@ -1,0 +1,9 @@
+.navlist-item {
+  background-color: palegoldenrod;
+  border: 1px solid black;
+}
+ul .moving {
+  background: transparent;
+  color: transparent;
+  border: 1px dashed #ccc;
+}

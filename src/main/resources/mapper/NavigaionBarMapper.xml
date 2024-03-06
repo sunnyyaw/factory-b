@@ -1,0 +1,22 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.factory.backend.mapper.NavigationBarMapper">
+    <select id="all" resultType="NavigationBar">
+        select * from navigation_bar;
+    </select>
+    <insert id="add" parameterType="NavigationBar" useGeneratedKeys="true" keyProperty="id">
+        insert into navigation_bar (name,href,sort) values (#{name},#{href},#{sort});
+    </insert>
+    <update id="update" parameterType="NavigationBar">
+        update navigation_bar
+        <set>
+            <if test="name!=null">name=#{name},</if>
+            <if test="href!=null">href=#{href},</if>
+            <if test="sort!=null">sort=#{sort},</if>
+        </set>
+        where id=#{id};
+    </update>
+    <delete id="remove" parameterType="java.lang.Long">
+        delete from navigation_bar where id=#{id};
+    </delete>
+</mapper>
