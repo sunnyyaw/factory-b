@@ -1,5 +1,6 @@
 const navbarList = document.getElementById('navbar-list');
 const addButton = document.getElementById('btn-add');
+const sortButton = document.getElementById('btn-sort');
 const navigationBarURL = 'http://localhost:8081/navigationBar';
 
 const handleClick = (index) => {
@@ -42,7 +43,7 @@ const handleAdd = () => {
 const handleSubmit = () => {
   const name = document.getElementById(`input-add-name`).value;
   const href = document.getElementById(`input-add-href`).value;
-  const body = {name,href};
+  const body = {name,href,sort: 0};
   fetch(navigationBarURL,{
     method: 'POST',
     headers: {
@@ -105,10 +106,13 @@ const getList = () => {
       navbarList.innerHTML += 
       `
         <li draggable="true" class="navlist-item" id="li-${index}">
-          id: <label><input id="input-${index}-id" value=${navItem.id} placeholder="导航栏编号" disabled></label>
-          name: <label><input id="input-${index}-name" class="input-${index}"
+          编号: <label><input id="input-${index}-id" class="input-id" value=${navItem.id} 
+          placeholder="导航栏编号" disabled></label>
+          顺序：<label><input id="input-${index}-sort" class="input-sort"
+          value=${index} placeholder="导航栏顺序" disabled ></label>
+          导航项名: <label><input id="input-${index}-name" class="input-${index}"
            value=${navItem.name} placeholder="输入导航栏内容" disabled ></label>
-          href: <label><input id="input-${index}-href" class="input-${index}"
+          导航地址: <label><input id="input-${index}-href" class="input-${index}"
            value=${navItem.href} placeholder="导航栏地址" disabled></label>
           <button id="btn-${index}" type="button" onclick="handleClick(${index})">编辑</button>
           <button id="btn-submit-${index}" type="button" onclick="handleEdit(${index})" hidden>提交</button>
@@ -120,9 +124,31 @@ const getList = () => {
   })
   .catch(error => console.error(error));
 }
+const handleSort = () => {
+  const navList = navbarList.children;
+  const id_sortMap = [...navList].map((navItem,index) => {
+    const id = navItem.getElementsByClassName('input-id')[0].value;
+    return {id,sort: index};
+  });
+  fetch(navigationBarURL + '/sort',{
+    method: 'PUT',
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+    },
+    body: JSON.stringify(id_sortMap),
+  }).then(response => {
+    if(response.status === 200) {
+      getList();
+    } else {
+      console.log(response)
+    }
+  })
+  .catch(error => console.error(error));
+};
 
 const init = () => {
   addButton.addEventListener('click',handleAdd);
+  sortButton.addEventListener('click',handleSort);
   navbarList.addEventListener('dragstart', e => {
     e.dataTransfer.effectAllowed = 'move';
     currentLi = e.target;
@@ -130,12 +156,13 @@ const init = () => {
   });
   navbarList.addEventListener('dragenter', e => {
     e.preventDefault();
-    if (e.target === currentLi || e.target === navbarList) {
+    if (e.target === currentLi || e.target === navbarList ) {
       return;
     }
-    let liArr = Array.from(navbarList.childNodes);
+    let liArr = Array.from(navbarList.children);
     let currentIndex = liArr.indexOf(currentLi);
     let targetIndex = liArr.indexOf(e.target);
+    if (targetIndex === -1) return;
     if (currentIndex < targetIndex) {
       navbarList.insertBefore(currentLi,e.target.nextElementSibling);
     } else {

@@ -1,5 +1,8 @@
 .navlist-item {
   background-color: palegoldenrod;
+  display: flex;
+  align-items: center;
+  height: 40px;
   border: 1px solid black;
 }
 ul .moving {
