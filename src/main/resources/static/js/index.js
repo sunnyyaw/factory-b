@@ -31,11 +31,14 @@ const handleCancelAdd = () => {
 const handleAdd = () => {
   navbarList.innerHTML += 
   `<li id="li-add">
-  id: <label><input disabled></label>
-  name: <label><input id="input-add-name" ></label>
-  href: <label><input id="input-add-href" ></label>
-  <button id="btn-cancel" type="button" onclick="handleCancelAdd()">取消</button>
-  <button id="btn-confirm" type="button" onclick="handleSubmit()">确认</button>
+    <form onsubmit="return handleSubmit();">
+    编号: <label><input disabled></label>
+    顺序: <label><input disabled></label>
+    导航项名: <label><input id="input-add-name" required></label>
+    导航地址: <label><input id="input-add-href" required></label>
+    <button id="btn-cancel" type="button" onclick="handleCancelAdd()">取消</button>
+    <input id="btn-confirm" type="submit" value="确认">
+    <form>
   </li>`;
   addButton.hidden = true;
 };
@@ -44,6 +47,7 @@ const handleSubmit = () => {
   const name = document.getElementById(`input-add-name`).value;
   const href = document.getElementById(`input-add-href`).value;
   const body = {name,href,sort: 0};
+  console.log(body);
   fetch(navigationBarURL,{
     method: 'POST',
     headers: {

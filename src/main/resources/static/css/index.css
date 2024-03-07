@@ -5,7 +5,24 @@
   height: 40px;
   border: 1px solid black;
 }
-ul .moving {
+.navlist-item:hover,.navlist-item:active {
+  background-color:lemonchiffon;
+}
+.navlist-item::after {
+  content: '\02795';
+  font-size: 13px;
+  color: white;
+  float: right;
+  margin-right: 5px;
+}
+.navlist-item::after {
+  cursor: pointer;
+}
+.navlist-item:active::after {
+  content: "\2796";
+}
+
+.moving {
   background: transparent;
   color: transparent;
   border: 1px dashed #ccc;
